@@ -3,7 +3,7 @@ import { defaultSiteContent } from '../data/defaultContent';
 import type { AdminCredentials, AdminPasswordChange, SiteContent } from '../types/content';
 
 const ADMIN_SESSION_KEY = 'adarsha-admin-session';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://adarsha-backend.onrender.com';
 const BASE_URL = import.meta.env.BASE_URL;
 
 function clone<T>(value: T): T {

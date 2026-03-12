@@ -226,6 +226,13 @@ app.get('/api/health', (_request, response) => {
   response.status(200).json({ status: 'ok', service: 'adarsha-backend' });
 });
 
+app.get('/api/test', (_request, response) => {
+  response.status(200).json({
+    message: 'API test successful',
+    status: 'Backend working',
+  });
+});
+
 app.get('/api/content', (_request, response) => {
   response.status(200).json(readJson(contentFile));
 });
