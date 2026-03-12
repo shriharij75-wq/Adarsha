@@ -1,13 +1,26 @@
-import { createServer } from 'node:http';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const envFile = join(__dirname, '..', '.env');
+
+dotenv.config({ path: envFile });
+
+const app = express();
 const dataDir = join(__dirname, 'data');
 const contentFile = join(dataDir, 'content.json');
 const adminFile = join(dataDir, 'admin.json');
-const port = Number(process.env.PORT || 4000);
+const port = Number(process.env.PORT || 5000);
+const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+app.use(cors());
+app.use(express.json());
+
 const defaultContent = {
   announcements: [
     {
@@ -69,25 +82,25 @@ const defaultContent = {
       {
         id: 'parent-1',
         name: 'Parents Feedback',
-        relation: 'ಶಾಲೆಯ ಬಗ್ಗೆ ಅಭಿಪ್ರಾಯ',
+        relation: 'à²¶à²¾à²²à³†à²¯ à²¬à²—à³à²—à³† à²…à²­à²¿à²ªà³à²°à²¾à²¯',
         image: 'images/parent-lokeshmurty.png',
         quote:
-          'ಶಿವಲಿಂಗಸ್ವಾಮೀಜಿ ಅವರು ಗ್ರಾಮೀಣ ಭಾಗದ ಮಕ್ಕಳಿಗೆ ಜ್ಞಾನದ ಬೆಳಕನ್ನು ನೀಡಬೇಕು ಎಂಬ ಉದ್ದೇಶದಿಂದ ಆದರ್ಶ ಶಾಲೆ ತೆರೆದು ಕಡಿಮೆ ವೆಚ್ಚದಲ್ಲಿ ನುರಿತ ಶಿಕ್ಷಕರಿಂದ ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ ನೀಡುತ್ತಿರುವುದರ ಜತೆಗೆ ಶಾಲೆಯಲ್ಲಿ ಕುಡಿಯುವ ನೀರು, ಶೌಚಾಲಯದ ವ್ಯವಸ್ಥೆ, ವಿಶಾಲವಾದ ಆಟದ ಮೈದಾನ, ಆವರಣದ ಸುತ್ತ ಕಾಂಪೌಂಡ್ ನಿರ್ಮಿಸಿ, ಸಸಿಗಳನ್ನು ನೆಟ್ಟು ಒಳ್ಳೆಯ ಪರಿಸರದಲ್ಲಿ ಶಿಕ್ಷಣ ನೀಡುತ್ತಾ ಮಕ್ಕಳ ಸರ್ವಾಂಗೀಣ ಪ್ರಗತಿಗೆ ದಾರಿ ದೀಪವಾಗಿದ್ದಾರೆ.',
+          'à²¶à²¿à²µà²²à²¿à²‚à²—à²¸à³à²µà²¾à²®à³€à²œà²¿ à²…à²µà²°à³ à²—à³à²°à²¾à²®à³€à²£ à²­à²¾à²—à²¦ à²®à²•à³à²•à²³à²¿à²—à³† à²œà³à²žà²¾à²¨à²¦ à²¬à³†à²³à²•à²¨à³à²¨à³ à²¨à³€à²¡à²¬à³‡à²•à³ à²Žà²‚à²¬ à²‰à²¦à³à²¦à³‡à²¶à²¦à²¿à²‚à²¦ à²†à²¦à²°à³à²¶ à²¶à²¾à²²à³† à²¤à³†à²°à³†à²¦à³ à²•à²¡à²¿à²®à³† à²µà³†à²šà³à²šà²¦à²²à³à²²à²¿ à²¨à³à²°à²¿à²¤ à²¶à²¿à²•à³à²·à²•à²°à²¿à²‚à²¦ à²‰à²¤à³à²¤à²® à²—à³à²£à²®à²Ÿà³à²Ÿà²¦ à²¶à²¿à²•à³à²·à²£ à²¨à³€à²¡à³à²¤à³à²¤à²¿à²°à³à²µà³à²¦à²° à²œà²¤à³†à²—à³† à²¶à²¾à²²à³†à²¯à²²à³à²²à²¿ à²•à³à²¡à²¿à²¯à³à²µ à²¨à³€à²°à³, à²¶à³Œà²šà²¾à²²à²¯à²¦ à²µà³à²¯à²µà²¸à³à²¥à³†, à²µà²¿à²¶à²¾à²²à²µà²¾à²¦ à²†à²Ÿà²¦ à²®à³ˆà²¦à²¾à²¨, à²†à²µà²°à²£à²¦ à²¸à³à²¤à³à²¤ à²•à²¾à²‚à²ªà³Œà²‚à²¡à³ à²¨à²¿à²°à³à²®à²¿à²¸à²¿, à²¸à²¸à²¿à²—à²³à²¨à³à²¨à³ à²¨à³†à²Ÿà³à²Ÿà³ à²’à²³à³à²³à³†à²¯ à²ªà²°à²¿à²¸à²°à²¦à²²à³à²²à²¿ à²¶à²¿à²•à³à²·à²£ à²¨à³€à²¡à³à²¤à³à²¤à²¾ à²®à²•à³à²•à²³ à²¸à²°à³à²µà²¾à²‚à²—à³€à²£ à²ªà³à²°à²—à²¤à²¿à²—à³† à²¦à²¾à²°à²¿ à²¦à³€à²ªà²µà²¾à²—à²¿à²¦à³à²¦à²¾à²°à³†.',
       },
       {
         id: 'parent-2',
-        name: 'ನಾಗರಾಜು',
-        relation: 'ಬೆಳವಾಡಿ',
+        name: 'à²¨à²¾à²—à²°à²¾à²œà³',
+        relation: 'à²¬à³†à²³à²µà²¾à²¡à²¿',
         image: 'images/community_parent_nagaraj.png',
         quote:
-          '"ಆದರ್ಶ ಹಿರಿಯ ಪ್ರಾಥಮಿಕ ಶಾಲೆ ಬೆಳವಾಡಿ ಗ್ರಾಮದಲ್ಲಿದೆ." ವ್ಯಾಸಂಗ ಮಾಡುತ್ತಿರುವ ಮಕ್ಕಳ ಮುಂದಿನ ಭವಿಷ್ಯದ ಬಗ್ಗೆ ಕಾಳಜಿ ವಹಿಸಿ ತುಂಬಾ ಶ್ರದ್ಧೆ, ಭಕ್ತಿಯಿಂದ ಪಾಠ ಪ್ರವಚನವನ್ನು ಮಾಡುತ್ತಿದ್ದೀರಿ. ಹೀಗೆ, ಮಕ್ಕಳಿಗೆ ಶಿಸ್ತು, ಕ್ರೀಡೆ, ಮನರಂಜನೆ, ಕಾಯಕಗಳನ್ನು ಕೂಡ ಮಾಡಿಸುತ್ತಿದ್ದೀರಿ. ಇದು ಹೆಮ್ಮೆಪಡುವಂತಹ ವಿಚಾರ. ಇದರಿಂದ ಮಕ್ಕಳ ತಂದೆ-ತಾಯಂದಿರಿಗೆ ಮತ್ತು ಗ್ರಾಮಸ್ಥರಿಗೆ ಸಂತೋಷವನ್ನು ತರುತ್ತಿದೆ. ಇದೇ ರೀತಿ ಶಾಲೆಯ ವ್ಯವಸ್ಥಾಪಕರು, ಉಪಾಧ್ಯಾಯರು ಮತ್ತು ಉಪಾಧ್ಯಾಯನಿಯರು ಮಕ್ಕಳಿಗೆ ಇನ್ನೂ ಹೆಚ್ಚಿನ ಬೋಧನೆಯನ್ನು ನೀಡಿ ಶಾಲೆಗೆ ಕೀರ್ತಿ ಮತ್ತು ಗೌರವವನ್ನು ತರಬೇಕೆಂದು ನಿಮ್ಮಲ್ಲಿ ವಿನಂತಿಸಿ ಕೇಳುತ್ತೇನೆ.',
+          '"à²†à²¦à²°à³à²¶ à²¹à²¿à²°à²¿à²¯ à²ªà³à²°à²¾à²¥à²®à²¿à²• à²¶à²¾à²²à³† à²¬à³†à²³à²µà²¾à²¡à²¿ à²—à³à²°à²¾à²®à²¦à²²à³à²²à²¿à²¦à³†." à²µà³à²¯à²¾à²¸à²‚à²— à²®à²¾à²¡à³à²¤à³à²¤à²¿à²°à³à²µ à²®à²•à³à²•à²³ à²®à³à²‚à²¦à²¿à²¨ à²­à²µà²¿à²·à³à²¯à²¦ à²¬à²—à³à²—à³† à²•à²¾à²³à²œà²¿ à²µà²¹à²¿à²¸à²¿ à²¤à³à²‚à²¬à²¾ à²¶à³à²°à²¦à³à²§à³†, à²­à²•à³à²¤à²¿à²¯à²¿à²‚à²¦ à²ªà²¾à²  à²ªà³à²°à²µà²šà²¨à²µà²¨à³à²¨à³ à²®à²¾à²¡à³à²¤à³à²¤à²¿à²¦à³à²¦à³€à²°à²¿. à²¹à³€à²—à³†, à²®à²•à³à²•à²³à²¿à²—à³† à²¶à²¿à²¸à³à²¤à³, à²•à³à²°à³€à²¡à³†, à²®à²¨à²°à²‚à²œà²¨à³†, à²•à²¾à²¯à²•à²—à²³à²¨à³à²¨à³ à²•à³‚à²¡ à²®à²¾à²¡à²¿à²¸à³à²¤à³à²¤à²¿à²¦à³à²¦à³€à²°à²¿. à²‡à²¦à³ à²¹à³†à²®à³à²®à³†à²ªà²¡à³à²µà²‚à²¤à²¹ à²µà²¿à²šà²¾à²°. à²‡à²¦à²°à²¿à²‚à²¦ à²®à²•à³à²•à²³ à²¤à²‚à²¦à³†-à²¤à²¾à²¯à²‚à²¦à²¿à²°à²¿à²—à³† à²®à²¤à³à²¤à³ à²—à³à²°à²¾à²®à²¸à³à²¥à²°à²¿à²—à³† à²¸à²‚à²¤à³‹à²·à²µà²¨à³à²¨à³ à²¤à²°à³à²¤à³à²¤à²¿à²¦à³†. à²‡à²¦à³‡ à²°à³€à²¤à²¿ à²¶à²¾à²²à³†à²¯ à²µà³à²¯à²µà²¸à³à²¥à²¾à²ªà²•à²°à³, à²‰à²ªà²¾à²§à³à²¯à²¾à²¯à²°à³ à²®à²¤à³à²¤à³ à²‰à²ªà²¾à²§à³à²¯à²¾à²¯à²¨à²¿à²¯à²°à³ à²®à²•à³à²•à²³à²¿à²—à³† à²‡à²¨à³à²¨à³‚ à²¹à³†à²šà³à²šà²¿à²¨ à²¬à³‹à²§à²¨à³†à²¯à²¨à³à²¨à³ à²¨à³€à²¡à²¿ à²¶à²¾à²²à³†à²—à³† à²•à³€à²°à³à²¤à²¿ à²®à²¤à³à²¤à³ à²—à³Œà²°à²µà²µà²¨à³à²¨à³ à²¤à²°à²¬à³‡à²•à³†à²‚à²¦à³ à²¨à²¿à²®à³à²®à²²à³à²²à²¿ à²µà²¿à²¨à²‚à²¤à²¿à²¸à²¿ à²•à³‡à²³à³à²¤à³à²¤à³‡à²¨à³†.',
       },
     ],
     alumni: [
       {
         id: 'alumni-1',
         name: 'Anil P.',
-        detail: 'Batch 2016 • Software Engineer',
+        detail: 'Batch 2016 â€¢ Software Engineer',
         image: 'images/gallery-09-annual-function.jpg',
         quote:
           'This school gave me discipline and confidence. The foundation I received here still helps me in my career.',
@@ -95,7 +108,7 @@ const defaultContent = {
       {
         id: 'alumni-2',
         name: 'Nandini S.',
-        detail: 'Batch 2018 • Nursing Professional',
+        detail: 'Batch 2018 â€¢ Nursing Professional',
         image: 'images/gallery-09-annual-function.jpg',
         quote:
           'My teachers encouraged me to dream big. I am proud to return and guide students who are now on the same path.',
@@ -103,7 +116,7 @@ const defaultContent = {
       {
         id: 'alumni-3',
         name: 'Karthik V.',
-        detail: 'Batch 2014 • Entrepreneur',
+        detail: 'Batch 2014 â€¢ Entrepreneur',
         image: 'images/gallery-09-annual-function.jpg',
         quote:
           'The values and communication skills I learned here shaped my leadership journey and my approach to life.',
@@ -160,10 +173,7 @@ function ensureDataFiles() {
   mkdirSync(dataDir, { recursive: true });
 
   if (!existsSync(contentFile)) {
-    writeFileSync(
-      contentFile,
-      JSON.stringify(defaultContent, null, 2)
-    );
+    writeFileSync(contentFile, JSON.stringify(defaultContent, null, 2));
   }
 
   if (!existsSync(adminFile)) {
@@ -172,7 +182,7 @@ function ensureDataFiles() {
       JSON.stringify(
         {
           username: 'admin',
-          password: 'shivalingaswamigalu@2001',
+          password: '1234',
         },
         null,
         2
@@ -193,110 +203,99 @@ function getStoredAdmin() {
   return readJson(adminFile);
 }
 
-function sendJson(response, statusCode, payload) {
-  response.writeHead(statusCode, {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,PUT,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  });
-  response.end(JSON.stringify(payload));
-}
-
-function readBody(request) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-
-    request.on('data', (chunk) => {
-      body += chunk;
-    });
-
-    request.on('end', () => {
-      if (!body) {
-        resolve({});
-        return;
-      }
-
-      try {
-        resolve(JSON.parse(body));
-      } catch (error) {
-        reject(error);
-      }
-    });
-
-    request.on('error', reject);
-  });
-}
-
 ensureDataFiles();
 
-const server = createServer(async (request, response) => {
-  if (!request.url) {
-    sendJson(response, 400, { error: 'Invalid request.' });
-    return;
-  }
+if (mongoUri) {
+  mongoose
+    .connect(mongoUri)
+    .then(() => {
+      console.log('MongoDB Connected');
+    })
+    .catch((error) => {
+      console.error('MongoDB connection failed:', error.message);
+    });
+} else {
+  console.warn('MONGODB_URI or MONGO_URI is not set. Starting without MongoDB connection.');
+}
 
-  if (request.method === 'OPTIONS') {
-    sendJson(response, 204, {});
-    return;
-  }
-
-  if (request.url === '/api/health' && request.method === 'GET') {
-    sendJson(response, 200, { status: 'ok', service: 'adarsha-backend' });
-    return;
-  }
-
-  if (request.url === '/api/content' && request.method === 'GET') {
-    sendJson(response, 200, readJson(contentFile));
-    return;
-  }
-
-  if (request.url === '/api/content' && request.method === 'PUT') {
-    try {
-      const body = await readBody(request);
-      writeJson(contentFile, body);
-      sendJson(response, 200, { message: 'Content updated.' });
-    } catch {
-      sendJson(response, 400, { error: 'Invalid JSON body.' });
-    }
-    return;
-  }
-
-  if (request.url === '/api/admin' && request.method === 'GET') {
-    const admin = getStoredAdmin();
-    sendJson(response, 200, { username: admin.username });
-    return;
-  }
-
-  if (request.url === '/api/admin/login' && request.method === 'POST') {
-    try {
-      const body = await readBody(request);
-      const admin = getStoredAdmin();
-      const authenticated = body.username === admin.username && body.password === admin.password;
-      sendJson(response, authenticated ? 200 : 401, {
-        authenticated,
-        username: authenticated ? admin.username : undefined,
-      });
-    } catch {
-      sendJson(response, 400, { error: 'Invalid JSON body.' });
-    }
-    return;
-  }
-
-  if (request.url === '/api/admin' && request.method === 'PUT') {
-    try {
-      const body = await readBody(request);
-      writeJson(adminFile, body);
-      sendJson(response, 200, { message: 'Admin credentials updated.' });
-    } catch {
-      sendJson(response, 400, { error: 'Invalid JSON body.' });
-    }
-    return;
-  }
-
-  sendJson(response, 404, { error: 'Route not found.' });
+app.get('/', (_request, response) => {
+  response.send('Adarsha Backend API Running 🚀');
 });
 
-server.listen(port, () => {
-  console.log(`Adarsha backend running on http://localhost:${port}`);
+app.get('/api/health', (_request, response) => {
+  response.status(200).json({ status: 'ok', service: 'adarsha-backend' });
+});
+
+app.get('/api/content', (_request, response) => {
+  response.status(200).json(readJson(contentFile));
+});
+
+app.put('/api/content', (request, response) => {
+  try {
+    writeJson(contentFile, request.body);
+    response.status(200).json({ message: 'Content updated.' });
+  } catch {
+    response.status(400).json({ error: 'Invalid JSON body.' });
+  }
+});
+
+app.get('/api/admin', (_request, response) => {
+  const admin = getStoredAdmin();
+  response.status(200).json({ username: admin.username });
+});
+
+app.post('/api/admin/login', (request, response) => {
+  try {
+    const admin = getStoredAdmin();
+    const authenticated =
+      request.body.username === admin.username && request.body.password === admin.password;
+
+    response.status(authenticated ? 200 : 401).json({
+      authenticated,
+      username: authenticated ? admin.username : undefined,
+    });
+  } catch {
+    response.status(400).json({ error: 'Invalid JSON body.' });
+  }
+});
+
+app.put('/api/admin', (request, response) => {
+  try {
+    const body = request.body;
+    const admin = getStoredAdmin();
+
+    if (!body.oldPassword || !body.newPassword || !body.confirmPassword) {
+      response
+        .status(400)
+        .json({ error: 'Old password, new password, and confirm password are required.' });
+      return;
+    }
+
+    if (body.oldPassword !== admin.password) {
+      response.status(401).json({ error: 'Old password is incorrect.' });
+      return;
+    }
+
+    if (body.newPassword !== body.confirmPassword) {
+      response.status(400).json({ error: 'New password and confirm password do not match.' });
+      return;
+    }
+
+    writeJson(adminFile, {
+      ...admin,
+      password: body.newPassword,
+    });
+
+    response.status(200).json({ message: 'Admin credentials updated.' });
+  } catch {
+    response.status(400).json({ error: 'Invalid JSON body.' });
+  }
+});
+
+app.use((_request, response) => {
+  response.status(404).json({ error: 'Route not found' });
+});
+
+app.listen(port, () => {
+  console.log(`Server started on http://localhost:${port}`);
 });
