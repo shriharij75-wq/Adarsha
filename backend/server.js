@@ -171,7 +171,7 @@ function ensureDataFiles() {
       adminFile,
       JSON.stringify(
         {
-          username: 'shivalingaswamigalu@2001',
+          username: 'admin',
           password: 'shivalingaswamigalu@2001',
         },
         null,
