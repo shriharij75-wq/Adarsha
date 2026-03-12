@@ -62,11 +62,11 @@ function AdminField({
 
 export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => getAdminSession());
-  const [credentials, setCredentials] = useState<AdminCredentials>({ username: 'admin', password: '' });
-  const [loginForm, setLoginForm] = useState<AdminCredentials>({ username: 'admin', password: '' });
+  const [credentials, setCredentials] = useState<AdminCredentials>({ username: 'shivalingaswamigalu@2001', password: '' });
+  const [loginForm, setLoginForm] = useState<AdminCredentials>({ username: 'shivalingaswamigalu@2001', password: '' });
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMessage, setStatusMessage] = useState('');
-  const [accountDraft, setAccountDraft] = useState<AdminCredentials>({ username: 'admin', password: '' });
+  const [accountDraft, setAccountDraft] = useState<AdminCredentials>({ username: 'shivalingaswamigalu@2001', password: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -265,7 +265,9 @@ export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageP
               >
                 Login
               </Button>
-              <p className="text-sm text-gray-500">Default backend admin: `admin` / `adarsha123`</p>
+              <p className="text-sm text-gray-500">
+                Username: `shivalingaswamigalu@2001` Password: `shivalingaswamigalu@2001`
+              </p>
               {statusMessage ? <p className="text-sm font-medium text-[#ea580c]">{statusMessage}</p> : null}
             </div>
           </div>

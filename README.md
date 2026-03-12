@@ -1,5 +1,5 @@
 
-# Premium School Website Design
+# ADARSHA HIGHER PRIMARY SCHOOL
 
 This project is separated into explicit frontend and backend areas:
 
