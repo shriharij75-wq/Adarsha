@@ -228,8 +228,7 @@ app.get('/api/health', (_request, response) => {
 
 app.get('/api/test', (_request, response) => {
   response.status(200).json({
-    message: 'API test successful',
-    status: 'Backend working',
+    message: 'API working',
   });
 });
 
