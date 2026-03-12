@@ -76,11 +76,11 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between h-[6.25rem] sm:h-[7.25rem] lg:h-[7.25rem]">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 2xl:flex-[0_0_22rem] pr-2">
+        <div className="flex items-center justify-between h-[6.25rem] sm:h-[7.25rem] lg:h-[7.25rem] gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 2xl:flex-[0_1_18rem] pr-1">
             <button
               onClick={goHome}
-              className="w-[5.25rem] h-[5.25rem] sm:w-[6.25rem] sm:h-[6.25rem] lg:w-[6rem] lg:h-[6rem] rounded-xl border border-blue-100 p-1 shrink-0 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a]/40"
+              className="w-[5.25rem] h-[5.25rem] sm:w-[6rem] sm:h-[6rem] lg:w-[5.5rem] lg:h-[5.5rem] rounded-xl border border-blue-100 p-1 shrink-0 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a]/40"
               aria-label="Go to home page"
             >
               <img
@@ -90,7 +90,7 @@ export function Navbar() {
               />
             </button>
             <div className="flex flex-col min-w-0">
-              <h1 className="text-[#1e3a8a] text-xs sm:text-base lg:text-sm xl:text-base 2xl:text-[1rem] font-bold leading-tight">
+              <h1 className="text-[#1e3a8a] text-xs sm:text-base lg:text-sm xl:text-base 2xl:text-[0.95rem] font-bold leading-tight">
                 {language === 'en' ? 'ADARSHA HIGHER PRIMARY SCHOOL' : 'ಆದರ್ಶ ಹಿ.ಪ್ರಾ.ಶಾಲೆ'}
               </h1>
               <p className="text-gray-600 text-[11px] sm:text-sm lg:text-sm">
@@ -99,31 +99,31 @@ export function Navbar() {
             </div>
           </div>
 
-          <div className="hidden 2xl:flex items-center justify-center gap-2.5 flex-1 px-2 min-w-0">
+          <div className="hidden 2xl:flex items-center justify-center flex-[1_1_0%] px-1 min-w-0">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => navigateToSection(link.id)}
-                className="text-[0.86rem] text-gray-700 hover:text-[#1e3a8a] transition-colors duration-300 relative group whitespace-nowrap"
+                className="group relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.9rem] font-extrabold tracking-[0.03em] text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:bg-gradient-to-r hover:from-[#1e3a8a]/10 hover:to-[#ea580c]/10 hover:text-[#1e3a8a]"
               >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#ea580c] transition-all duration-300 group-hover:w-full" />
+                <span className="relative z-10">{link.label}</span>
+                <span className="absolute inset-x-2.5 bottom-1.5 h-0.5 origin-center scale-x-0 rounded-full bg-[#ea580c] transition-transform duration-300 group-hover:scale-x-100" />
               </button>
             ))}
           </div>
 
-          <div className="hidden 2xl:flex items-center gap-2 2xl:flex-[0_0_auto] pl-1">
-            <div className="flex items-center gap-2">
-              <div className="h-[6.2rem] w-[4.45rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
+          <div className="hidden 2xl:flex items-center gap-1.5 2xl:flex-[0_1_10rem] pl-1">
+            <div className="flex items-center gap-1.5">
+              <div className="h-[5.35rem] w-[3.7rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
                 <img src={siteImages.swamiji.one} alt="Swamiji 1" className="h-full w-full object-cover" />
               </div>
-              <div className="h-[6.2rem] w-[4.45rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
+              <div className="h-[5.35rem] w-[3.7rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
                 <img src={siteImages.swamiji.two} alt="Swamiji 2" className="h-full w-full object-cover" />
               </div>
             </div>
             <button
               onClick={() => setLanguage(language === 'en' ? 'kn' : 'en')}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-[#1e3a8a]/20 bg-white text-[#1e3a8a] text-xs hover:bg-[#f8fafc] transition-colors duration-300 shrink-0"
+              className="flex items-center gap-1.5 px-2 py-1.5 rounded-full border border-[#1e3a8a]/20 bg-white text-[#1e3a8a] text-[11px] hover:bg-[#f8fafc] transition-colors duration-300 shrink-0"
             >
               <Globe className="w-4 h-4" />
               {language === 'en' ? 'ಕನ್ನಡ' : 'English'}

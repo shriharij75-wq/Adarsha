@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { defaultSiteContent } from '../data/defaultContent';
-import type { AdminCredentials, SiteContent } from '../types/content';
+import type { AdminCredentials, AdminPasswordChange, SiteContent } from '../types/content';
 
 const ADMIN_SESSION_KEY = 'adarsha-admin-session';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 const BASE_URL = import.meta.env.BASE_URL;
 
 function clone<T>(value: T): T {
@@ -104,11 +104,20 @@ export async function fetchAdminProfile(): Promise<Pick<AdminCredentials, 'usern
   return requestJson<Pick<AdminCredentials, 'username'>>('/api/admin');
 }
 
-export async function saveAdminCredentials(credentials: AdminCredentials) {
-  await requestJson<{ message: string }>('/api/admin', {
+export async function saveAdminCredentials(credentials: AdminPasswordChange) {
+  const response = await fetch(`${API_BASE_URL}/api/admin`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(credentials),
   });
+
+  const payload = (await response.json()) as { message?: string; error?: string };
+
+  if (!response.ok) {
+    throw new Error(payload.error || payload.message || `Request failed: ${response.status}`);
+  }
 }
 
 export async function verifyAdminLogin(credentials: AdminCredentials) {

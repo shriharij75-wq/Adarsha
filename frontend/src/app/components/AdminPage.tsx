@@ -13,6 +13,7 @@ import {
 } from '../lib/siteContent';
 import type {
   AdminCredentials,
+  AdminPasswordChange,
   AlumniTestimonial,
   Announcement,
   CommunityGroup,
@@ -66,7 +67,11 @@ export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageP
   const [loginForm, setLoginForm] = useState<AdminCredentials>({ username: 'admin', password: '' });
   const [draft, setDraft] = useState<SiteContent>(content);
   const [statusMessage, setStatusMessage] = useState('');
-  const [accountDraft, setAccountDraft] = useState<AdminCredentials>({ username: 'admin', password: '' });
+  const [passwordDraft, setPasswordDraft] = useState<AdminPasswordChange & { confirmPassword: string }>({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -78,7 +83,6 @@ export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageP
       try {
         const profile = await fetchAdminProfile();
         setCredentials({ username: profile.username, password: '' });
-        setAccountDraft((current) => ({ ...current, username: profile.username }));
         setLoginForm((current) => ({ ...current, username: profile.username }));
       } catch {
         setStatusMessage('Unable to connect to backend admin service.');
@@ -213,18 +217,31 @@ export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageP
   };
 
   const handleCredentialSave = async () => {
-    if (!accountDraft.username.trim() || !accountDraft.password.trim()) {
-      setStatusMessage('Username and password are required to update the admin account.');
+    if (!passwordDraft.oldPassword || !passwordDraft.newPassword || !passwordDraft.confirmPassword) {
+      setStatusMessage('Old password, new password, and confirm password are required.');
+      return;
+    }
+
+    if (passwordDraft.newPassword !== passwordDraft.confirmPassword) {
+      setStatusMessage('New password and confirm password must match.');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await saveAdminCredentials(accountDraft);
-      setCredentials({ username: accountDraft.username, password: '' });
-      setStatusMessage('Admin credentials updated on backend.');
-    } catch {
-      setStatusMessage('Unable to update admin credentials on backend.');
+      await saveAdminCredentials({
+        oldPassword: passwordDraft.oldPassword,
+        newPassword: passwordDraft.newPassword,
+        confirmPassword: passwordDraft.confirmPassword,
+      });
+      setPasswordDraft({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+      setStatusMessage('Admin password updated successfully.');
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : 'Unable to update password.');
     } finally {
       setIsSubmitting(false);
     }
@@ -637,20 +654,28 @@ export function AdminPage({ content, onSaveContent, onResetContent }: AdminPageP
           <TabsContent value="account">
             <SectionCard title="Admin Account">
               <p className="text-sm text-gray-600">
-                Admin account changes now update the backend service, so use the backend as the source of truth.
+                Change the admin password by entering the current password, then the new password twice.
               </p>
-              <div className="grid gap-4 lg:grid-cols-2">
-                <AdminField label="Username">
-                  <Input
-                    value={accountDraft.username}
-                    onChange={(event) => setAccountDraft((current) => ({ ...current, username: event.target.value }))}
-                  />
-                </AdminField>
-                <AdminField label="Password">
+              <div className="grid gap-4 lg:grid-cols-3">
+                <AdminField label="Old Password">
                   <Input
                     type="password"
-                    value={accountDraft.password}
-                    onChange={(event) => setAccountDraft((current) => ({ ...current, password: event.target.value }))}
+                    value={passwordDraft.oldPassword}
+                    onChange={(event) => setPasswordDraft((current) => ({ ...current, oldPassword: event.target.value }))}
+                  />
+                </AdminField>
+                <AdminField label="New Password">
+                  <Input
+                    type="password"
+                    value={passwordDraft.newPassword}
+                    onChange={(event) => setPasswordDraft((current) => ({ ...current, newPassword: event.target.value }))}
+                  />
+                </AdminField>
+                <AdminField label="Confirm New Password">
+                  <Input
+                    type="password"
+                    value={passwordDraft.confirmPassword}
+                    onChange={(event) => setPasswordDraft((current) => ({ ...current, confirmPassword: event.target.value }))}
                   />
                 </AdminField>
               </div>

@@ -53,6 +53,12 @@ export type AdminCredentials = {
   password: string;
 };
 
+export type AdminPasswordChange = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 export type SiteContent = {
   announcements: Announcement[];
   community: CommunityContent;
