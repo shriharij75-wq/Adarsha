@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { API_URL } from '../config';
 import { defaultSiteContent } from '../data/defaultContent';
 import type { AdminCredentials, AdminPasswordChange, SiteContent } from '../types/content';
 
 const ADMIN_SESSION_KEY = 'adarsha-admin-session';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://adarsha-backend.onrender.com';
 const BASE_URL = import.meta.env.BASE_URL;
 
 function clone<T>(value: T): T {
@@ -11,7 +11,7 @@ function clone<T>(value: T): T {
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
       ...(init?.headers || {}),
@@ -105,7 +105,7 @@ export async function fetchAdminProfile(): Promise<Pick<AdminCredentials, 'usern
 }
 
 export async function saveAdminCredentials(credentials: AdminPasswordChange) {
-  const response = await fetch(`${API_BASE_URL}/api/admin`, {
+  const response = await fetch(`${API_URL}/api/admin`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export async function saveAdminCredentials(credentials: AdminPasswordChange) {
 }
 
 export async function verifyAdminLogin(credentials: AdminCredentials) {
-  const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+  const response = await fetch(`${API_URL}/api/admin/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
