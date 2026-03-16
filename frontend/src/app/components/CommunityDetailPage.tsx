@@ -65,7 +65,7 @@ export function CommunityDetailPage({ pageKey, community }: CommunityDetailPageP
                 className="bg-white border border-blue-100 rounded-2xl overflow-hidden shadow-lg md:col-span-2 lg:col-span-3"
               >
                 <div className="grid lg:grid-cols-[280px_1fr]">
-                  <img src={parent.image} alt={parent.name} className="w-full h-56 sm:h-72 lg:h-full object-cover" />
+                  <img src={parent.image} alt={parent.name} loading="lazy" className="w-full h-56 sm:h-72 lg:h-full object-cover" />
                   <div className="p-6 lg:p-8">
                     <h3 className="text-xl font-bold text-[#1e3a8a]">{parent.name}</h3>
                     <p className="text-sm text-[#ea580c] font-semibold mb-3">{parent.relation}</p>
@@ -90,7 +90,7 @@ export function CommunityDetailPage({ pageKey, community }: CommunityDetailPageP
                 transition={{ duration: 0.4, delay: index * 0.06 }}
                 className="bg-white border border-blue-100 rounded-2xl overflow-hidden shadow-lg"
               >
-                <img src={alumni.image} alt={alumni.name} className="w-full h-52 object-cover" />
+                <img src={alumni.image} alt={alumni.name} loading="lazy" className="w-full h-52 object-cover" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-[#1e3a8a]">{alumni.name}</h3>
                   <p className="text-sm text-[#ea580c] font-semibold mb-3">{alumni.detail}</p>
@@ -115,7 +115,7 @@ export function CommunityDetailPage({ pageKey, community }: CommunityDetailPageP
                 className="bg-white border border-blue-100 rounded-2xl overflow-hidden shadow-lg"
               >
                 <div className="w-full h-72 bg-[#f7f9ff] p-2 flex items-center justify-center border-b border-blue-100">
-                  <img src={faculty.photo} alt={faculty.name} className="w-full h-full object-contain" />
+                  <img src={faculty.photo} alt={faculty.name} loading="lazy" className="w-full h-full object-contain" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-[#1e3a8a] mb-2">{faculty.name}</h3>
@@ -133,3 +133,6 @@ export function CommunityDetailPage({ pageKey, community }: CommunityDetailPageP
     </section>
   );
 }
+
+
+

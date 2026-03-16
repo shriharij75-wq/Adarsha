@@ -98,6 +98,7 @@ export function About() {
               <img
                 src={siteImages.about}
                 alt="School Building"
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a8a]/20 to-transparent" />
@@ -189,3 +190,4 @@ export function About() {
     </section>
   );
 }
+

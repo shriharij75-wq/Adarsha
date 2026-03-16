@@ -1,7 +1,13 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { buildHomeHashUrl, buildSitePath } from '../lib/routing';
 
 export function Footer() {
   const scrollToSection = (id: string) => {
+    if (window.location.pathname !== buildSitePath(import.meta.env.BASE_URL, '/')) {
+      window.location.href = buildHomeHashUrl(import.meta.env.BASE_URL, id);
+      return;
+    }
+
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -11,7 +17,7 @@ export function Footer() {
   return (
     <footer className="bg-[#1e293b] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ea580c] to-[#fb923c] flex items-center justify-center">
@@ -26,7 +32,7 @@ export function Footer() {
               Empowering Rural Dreams Through Quality Education since 1987.
             </p>
             <p className="text-gray-300 text-sm">
-              ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣದ ಮೂಲಕ ಗ್ರಾಮೀಣ ಕನಸುಗಳನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು
+              Quality education for rural children with strong values, discipline, and community trust.
             </p>
           </div>
 
@@ -36,11 +42,32 @@ export function Footer() {
               {['Home', 'About', 'Academics', 'Announcements', 'Facilities', 'Gallery', 'Contact'].map((link) => (
                 <li key={link}>
                   <button
-                    onClick={() => scrollToSection(link === 'Announcements' ? 'announcements' : link.toLowerCase())}
+                    onClick={() => scrollToSection(link === 'Home' ? 'home' : link === 'Announcements' ? 'announcements' : link.toLowerCase())}
                     className="text-gray-300 hover:text-white transition-colors text-sm hover:translate-x-1 inline-block"
                   >
                     {link}
                   </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-lg mb-6">SEO Pages</h4>
+            <ul className="space-y-3">
+              {[
+                ['About School', '/about-school'],
+                ['Admission', '/admission'],
+                ['Facilities', '/facilities'],
+                ['Contact', '/contact'],
+              ].map(([label, path]) => (
+                <li key={path}>
+                  <a
+                    href={buildSitePath(import.meta.env.BASE_URL, path)}
+                    className="text-gray-300 hover:text-white transition-colors text-sm hover:translate-x-1 inline-block"
+                  >
+                    {label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -59,7 +86,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-[#ea580c] flex-shrink-0" />
-                <span className="text-gray-300 text-sm">+91 98765 43210</span>
+                <span className="text-gray-300 text-sm">+91 76764 89193</span>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-[#ea580c] flex-shrink-0" />

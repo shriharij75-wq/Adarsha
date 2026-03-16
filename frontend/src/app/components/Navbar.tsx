@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Mail, Globe, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { siteImages } from '../data/siteImages';
+import { buildHomeHashUrl, buildSitePath } from '../lib/routing';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,10 +27,12 @@ export function Navbar() {
 
   const navigateToSection = (id: string) => {
     const isSpecialPage =
-      window.location.hash.startsWith('#/community/') || window.location.hash === '#/admin';
+      window.location.hash.startsWith('#/community/') ||
+      window.location.hash === '#/admin' ||
+      window.location.pathname !== buildSitePath(import.meta.env.BASE_URL, '/');
 
     if (isSpecialPage) {
-      window.location.hash = id === 'home' ? '#home' : `#${id}`;
+      window.location.href = buildHomeHashUrl(import.meta.env.BASE_URL, id === 'home' ? undefined : id);
       setIsMobileMenuOpen(false);
       return;
     }
@@ -45,8 +48,12 @@ export function Navbar() {
 
   const goHome = () => {
     setIsMobileMenuOpen(false);
-    if (window.location.hash.startsWith('#/community/') || window.location.hash === '#/admin') {
-      window.location.hash = '#home';
+    if (
+      window.location.hash.startsWith('#/community/') ||
+      window.location.hash === '#/admin' ||
+      window.location.pathname !== buildSitePath(import.meta.env.BASE_URL, '/')
+    ) {
+      window.location.href = buildHomeHashUrl(import.meta.env.BASE_URL);
       return;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -86,6 +93,7 @@ export function Navbar() {
               <img
                 src={siteImages.logo}
                 alt="Adarsha Higher Primary School logo"
+                loading="eager"
                 className="w-full h-full rounded-lg object-contain"
               />
             </button>
@@ -94,7 +102,7 @@ export function Navbar() {
                 {language === 'en' ? 'ADARSHA HIGHER PRIMARY SCHOOL' : 'ಆದರ್ಶ ಹಿ.ಪ್ರಾ.ಶಾಲೆ'}
               </h1>
               <p className="text-gray-600 text-[11px] sm:text-sm lg:text-sm">
-                {language === 'en' ? 'Belakavadi' : 'ಬೆಳವಾಡಿ'}
+                {language === 'en' ? 'Belakavadi' : 'ಬೆಳಕವಾಡಿ'}
               </p>
             </div>
           </div>
@@ -115,10 +123,10 @@ export function Navbar() {
           <div className="hidden 2xl:flex items-center gap-1.5 2xl:flex-[0_1_10rem] pl-1">
             <div className="flex items-center gap-1.5">
               <div className="h-[5.35rem] w-[3.7rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
-                <img src={siteImages.swamiji.one} alt="Swamiji 1" className="h-full w-full object-cover" />
+                <img src={siteImages.swamiji.one} alt="Swamiji 1" loading="lazy" className="h-full w-full object-cover" />
               </div>
               <div className="h-[5.35rem] w-[3.7rem] rounded-[999px] overflow-hidden border border-blue-100 shadow-sm bg-white/80">
-                <img src={siteImages.swamiji.two} alt="Swamiji 2" className="h-full w-full object-cover" />
+                <img src={siteImages.swamiji.two} alt="Swamiji 2" loading="lazy" className="h-full w-full object-cover" />
               </div>
             </div>
             <button
@@ -126,7 +134,7 @@ export function Navbar() {
               className="flex items-center gap-1.5 px-2 py-1.5 rounded-full border border-[#1e3a8a]/20 bg-white text-[#1e3a8a] text-[11px] hover:bg-[#f8fafc] transition-colors duration-300 shrink-0"
             >
               <Globe className="w-4 h-4" />
-              {language === 'en' ? 'ಕನ್ನಡ' : 'English'}
+              {language === 'en' ? 'Kannada' : 'English'}
             </button>
           </div>
 
@@ -142,7 +150,7 @@ export function Navbar() {
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-[#1e3a8a]/20 bg-white text-[#1e3a8a] text-xs"
             >
               <Globe className="w-3.5 h-3.5" />
-              {language === 'en' ? 'ಕನ್ನಡ' : 'EN'}
+              {language === 'en' ? 'Kannada' : 'EN'}
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -178,8 +186,8 @@ export function Navbar() {
               ))}
               <div className="pt-3 border-t border-gray-200 space-y-2">
                 <div className="flex items-center gap-2 px-4 py-2">
-                  <img src={siteImages.swamiji.one} alt="Swamiji 1" className="w-20 h-20 object-contain" />
-                  <img src={siteImages.swamiji.two} alt="Swamiji 2" className="w-20 h-20 object-contain" />
+                  <img src={siteImages.swamiji.one} alt="Swamiji 1" loading="lazy" className="w-20 h-20 object-contain" />
+                  <img src={siteImages.swamiji.two} alt="Swamiji 2" loading="lazy" className="w-20 h-20 object-contain" />
                 </div>
                 <button
                   onClick={goToAdmin}
@@ -206,7 +214,7 @@ export function Navbar() {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#1e3a8a]/20 bg-white text-[#1e3a8a] hover:bg-[#f8fafc] transition-colors duration-300"
                 >
                   <Globe className="w-4 h-4" />
-                  {language === 'en' ? 'Switch to ಕನ್ನಡ' : 'Switch to English'}
+                  {language === 'en' ? 'Switch to Kannada' : 'Switch to English'}
                 </button>
               </div>
             </div>

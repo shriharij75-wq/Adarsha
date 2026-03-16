@@ -6,4 +6,24 @@
 <priority>1.0</priority>
 </url>
 
+<url>
+<loc>https://www.adarshabelakavadi.com/about-school</loc>
+<priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://www.adarshabelakavadi.com/admission</loc>
+<priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://www.adarshabelakavadi.com/facilities</loc>
+<priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://www.adarshabelakavadi.com/contact</loc>
+<priority>0.8</priority>
+</url>
+
 </urlset>

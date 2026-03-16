@@ -26,7 +26,7 @@ export function ManagementWords() {
             className="w-full"
           >
             <div className="rounded-2xl overflow-hidden border border-blue-100 shadow-xl">
-              <img src={managementImage} alt="Sri Shivalinga Swamiji" className="w-full h-[360px] sm:h-[440px] object-cover" />
+              <img src={managementImage} alt="Sri Shivalinga Swamiji" loading="lazy" className="w-full h-[360px] sm:h-[440px] object-cover" />
             </div>
           </motion.div>
 
@@ -74,3 +74,4 @@ export function ManagementWords() {
     </section>
   );
 }
+
